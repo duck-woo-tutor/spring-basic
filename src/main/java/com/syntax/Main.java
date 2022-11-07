@@ -4,33 +4,10 @@ import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) {
-        long bitOperatorStartTime = System.nanoTime();
+        String sparta = "sparta !!";
+        System.out.println(sparta);
 
-        if(false & false) {
-            System.out.println("펄펄");
-        } else if(true & false) {
-            System.out.println("투펄");
-        } else if(false & true) {
-            System.out.println("펄투");
-        } else if(true & true) {
-            System.out.println("투투");
-        }
-        
-        System.out.println(System.nanoTime() - bitOperatorStartTime);
-
-        System.out.println("---");
-        long operatorStartTime = System.nanoTime();
-
-        if(false && false) {
-            System.out.println("펄펄");
-        } else if(true && false) {
-            System.out.println("투펄");
-        } else if(false && true) {
-            System.out.println("펄투");
-        } else if(true && true) {
-            System.out.println("투투");
-        }
-
-        System.out.println(System.nanoTime() - operatorStartTime);
+        int[] intArray = new int[] {1,2,3,4,5}; // int 배열을 선언과 동시에 초기화
+        System.out.println(Arrays.toString(intArray));
     }
 }
