@@ -4,34 +4,50 @@ import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) {
-        // if - else
-        int num1 = 50;
-        if (num1 > 0) {
-            System.out.println("100보다 큰 수입니다");
-        } else {
-            System.out.println("100보다 작은 수입니다.");
+        // for
+        /* sudo
+        for(초기값 ; 조건식 ; 증감식){
+            실행 코드 블럭
+        }
+         */
+        int sum = 0;
+
+        for (int i = 0; i < 10; i++) {
+            sum += (i + 1);
+        }
+        System.out.println(sum);
+
+        // for-each
+        int[] days = new int[]{1, 2, 3, 4};
+        for (int day : days) {
+            System.out.println(day);
         }
 
-        // switch
-        switch (num1) {
-            case 0:
-                System.out.println("응애 나 0");
+        // while
+        int i = 0;
+        sum = 0;
+        while (i < 10) {
+
+            if (i==3){
+                continue;
+            }
+
+            if (i==5){
                 break;
-            case 1:
-                System.out.println("응애 나 1");
-                break;
-            case 2:
-                System.out.println("응애 나 2");
-                break;
-            default:
-                System.out.println("응애 나 몰라");
-                break;
+            }
+
+            sum += i + 1;
+            i += 1;
         }
+        System.out.println(sum);
 
-        // 삼항 연산자
-        int a = 5;
-
-        String reuslt = (a < 10) ? "10보다 작습니다." : "10보다 큽니다.";
-        System.out.println(reuslt);
+        // do-while
+        i = 1;
+        int result = 0;
+        do {
+            result += i;
+            i += 1;
+        } while (i < 2);
+        System.out.println(result);
     }
 }
