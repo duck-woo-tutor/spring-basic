@@ -1,11 +1,9 @@
-package com.syntax;
+package syntax;
 
-import java.util.Arrays;
-
-public class Main {
+public class Basic {
     public static void main(String[] args) {
         // for
-        /* sudo
+        /* pseudo code
         for(초기값 ; 조건식 ; 증감식){
             실행 코드 블럭
         }
@@ -17,17 +15,17 @@ public class Main {
         }
         System.out.println(sum);
 
-        // for-each
+        System.out.println("--for-each--");
         int[] days = new int[]{1, 2, 3, 4};
         for (int day : days) {
             System.out.println(day);
         }
 
-        // while
+        System.out.println("--while--");
         int i = 0;
         sum = 0;
         while (i < 10) {
-
+            i += 1;
             if (i==3){
                 continue;
             }
@@ -37,9 +35,9 @@ public class Main {
             }
 
             sum += i + 1;
-            i += 1;
         }
         System.out.println(sum);
+        System.out.println("----");
 
         // do-while
         i = 1;
