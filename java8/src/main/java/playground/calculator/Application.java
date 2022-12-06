@@ -37,7 +37,7 @@ public class Application {
         // overloading check
         Calculator calculator = new Calculator();
         System.out.println(calculator.average(new int[]{1, 2, 3, 4, 5, 6, 7}));
-        System.out.println(calculator.average(List.of(1, 2, 3, 4, 5, 6, 7)));
+//        System.out.println(calculator.average(List.of(1, 2, 3, 4, 5, 6, 7)));
 
         System.out.println("---Mineral Calculator");
         MineralCalculator mineralCalculator = new MineralCalculator();
