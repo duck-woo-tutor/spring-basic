@@ -2,6 +2,9 @@ package io.starter.service;
 
 import io.starter.domain.Member;
 import io.starter.repository.MemberRepository;
+import io.starter.repository.MemoryMemberRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -18,7 +21,6 @@ public class MemberService { // 비즈니스적 로직에 맞는 네이밍
 
     /**
      * 회원 가입
-     *
      * @param member
      * @return
      */
