@@ -1,13 +1,9 @@
 package io.starter.config;
 
-import io.starter.repository.*;
+import io.starter.repository.MemberRepository;
 import io.starter.service.MemberService;
-import jakarta.persistence.EntityManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import javax.sql.DataSource;
 
 @Configuration
 public class SpringConfig {
@@ -21,5 +17,4 @@ public class SpringConfig {
     public MemberService memberService() {
         return new MemberService(memberRepository);
     }
-
 }
