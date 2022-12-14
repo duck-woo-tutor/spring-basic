@@ -12,9 +12,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import java.util.List;
 
 @Controller
-@RequiredArgsConstructor
 public class MemberController {
     private final MemberService memberService;
+
+    public MemberController(MemberService memberService) {
+        this.memberService = memberService;
+        System.out.println("memberService = " + memberService.getClass());
+    }
 
     @GetMapping("/members/new")
     public String createForn() {

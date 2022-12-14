@@ -16,6 +16,7 @@ public class MemberService { // 비즈니스적 로직에 맞는 네이밍
 
     public MemberService(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
+        System.out.println("memberRepository = " + memberRepository.getClass());
     }
 
     /**
