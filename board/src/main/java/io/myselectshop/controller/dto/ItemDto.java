@@ -11,12 +11,12 @@ public class ItemDto {
     private String title;
     private String link;
     private String image;
-    private int price;
+    private int lprice;
 
     public ItemDto(JSONObject itemJson) throws JSONException {
         this.title = itemJson.getString("title");
         this.link =  itemJson.getString("link");
         this.image = itemJson.getString("image");
-        this.price = itemJson.getInt("lprice");
+        this.lprice = itemJson.getInt("lprice");
     }
 }
