@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 @Transactional
 public class MemberService { // 비즈니스적 로직에 맞는 네이밍
     private final MemberRepository memberRepository;
