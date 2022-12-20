@@ -1,4 +1,4 @@
-package io.myselectshop.controller.dto;
+package io.myselectshop.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,4 +1,4 @@
-package io.myselectshop.controller.dto;
+package io.myselectshop.dto;
 
 import io.myselectshop.entity.Product;
 import lombok.AllArgsConstructor;

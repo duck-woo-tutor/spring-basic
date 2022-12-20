@@ -1,6 +1,6 @@
 package io.myselectshop.controller;
 
-import io.myselectshop.controller.dto.ItemDto;
+import io.myselectshop.dto.ItemDto;
 import io.myselectshop.service.NaverApiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.configurationprocessor.json.JSONException;

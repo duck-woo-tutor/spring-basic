@@ -1,7 +1,6 @@
 package io.myselectshop.service;
 
-import io.myselectshop.controller.dto.ItemDto;
-import lombok.SneakyThrows;
+import io.myselectshop.dto.ItemDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.configurationprocessor.json.JSONArray;

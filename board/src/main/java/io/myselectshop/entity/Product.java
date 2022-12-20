@@ -1,6 +1,6 @@
 package io.myselectshop.entity;
 
-import io.myselectshop.controller.dto.ProductRequestDto;
+import io.myselectshop.dto.ProductRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
