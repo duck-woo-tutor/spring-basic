@@ -1,5 +1,6 @@
 package io.myselectshop.entity;
 
+import io.myselectshop.dto.ItemDto;
 import io.myselectshop.dto.ProductMyPriceRequestDto;
 import io.myselectshop.dto.ProductRequestDto;
 import jakarta.persistence.*;
@@ -9,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class Product {
+public class Product extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -42,5 +43,9 @@ public class Product {
 
     public void update(ProductMyPriceRequestDto requestDto) {
         this.myprice = requestDto.getMyPrice();
+    }
+
+    public void updateByItemDto(ItemDto itemDto) {
+        this.lprice = itemDto.getLprice();
     }
 }
