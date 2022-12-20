@@ -1,5 +1,6 @@
 package io.myselectshop.entity;
 
+import io.myselectshop.dto.ProductMyPriceRequestDto;
 import io.myselectshop.dto.ProductRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -37,5 +38,9 @@ public class Product {
         this.link = requestDto.getLink();
         this.lprice = requestDto.getLprice();
         this.myprice = 0;
+    }
+
+    public void update(ProductMyPriceRequestDto requestDto) {
+        this.myprice = requestDto.getMyPrice();
     }
 }

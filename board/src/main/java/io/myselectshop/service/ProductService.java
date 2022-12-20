@@ -2,14 +2,13 @@ package io.myselectshop.service;
 
 import io.myselectshop.dto.ProductMyPriceRequestDto;
 import io.myselectshop.dto.ProductRequestDto;
-import io.myselectshop.dto.ProductResponseDto;
 import io.myselectshop.entity.Product;
 import io.myselectshop.repository.ProductRepository;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -21,23 +20,25 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public ProductResponseDto createProduct(ProductRequestDto requestDto) throws SQLException {
+    public Product createProduct(ProductRequestDto requestDto) {
         Product product = new Product(requestDto);
 
-        return productRepository.createProduct(product);
+        return productRepository.save(product);
     }
 
-    public List<ProductResponseDto> getProducts() throws SQLException {
-        return productRepository.getProducts();
+    public List<Product> getProducts() {
+        return productRepository.findAll();
     }
 
-    public Long updateProduct(Long id, ProductMyPriceRequestDto requestDto) throws SQLException {
-        Product product = productRepository.getProduct(id);
+    public Long updateProduct(Long id, ProductMyPriceRequestDto requestDto) {
+        Optional<Product> byId = productRepository.findById(id);
 
-        if (product == null) {
+        if (!byId.isPresent()) {
             throw new NullPointerException("해당 상품은 존재하지 않습니다.");
         }
+        Product product = byId.get();
+        product.update(requestDto);
 
-        return productRepository.updateProduct(product.getId(), requestDto);
+        return productRepository.save(product).getId();
     }
 }

@@ -7,8 +7,8 @@ import io.myselectshop.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.SQLException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -18,17 +18,17 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping("/products")
-    public ProductResponseDto createProduct(@RequestBody ProductRequestDto requestDto) throws SQLException {
-        return productService.createProduct(requestDto);
+    public ProductResponseDto createProduct(@RequestBody ProductRequestDto requestDto) {
+        return new ProductResponseDto(productService.createProduct(requestDto));
     }
 
     @GetMapping("/products")
-    public List<ProductResponseDto> getProducts() throws SQLException {
-        return productService.getProducts();
+    public List<ProductResponseDto> getProducts() {
+        return productService.getProducts().stream().map(ProductResponseDto::new).collect(Collectors.toList());
     }
 
     @PutMapping("/products/{id}")
-    public Long updateProduct(@PathVariable Long id, @RequestBody ProductMyPriceRequestDto requestDto) throws SQLException {
+    public Long updateProduct(@PathVariable Long id, @RequestBody ProductMyPriceRequestDto requestDto) {
         return productService.updateProduct(id, requestDto);
     }
 }
