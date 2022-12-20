@@ -37,7 +37,7 @@ public class Scheduler {
         }
     }
 
-    @Scheduled(fixedDelay = 1000)
+//    @Scheduled(fixedDelay = 1000)
     public void scheduleCheck() throws InterruptedException {
         log.info("schedule 아~ 1초마다 돌아라!");
     }
