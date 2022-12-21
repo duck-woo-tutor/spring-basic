@@ -3,11 +3,10 @@ package io.myselectshop.controller;
 import io.myselectshop.dto.LoginRequestDto;
 import io.myselectshop.dto.SignRequestDto;
 import io.myselectshop.service.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 @RequiredArgsConstructor
@@ -32,9 +31,10 @@ public class UserController {
         return "redirect:/api/user/login";
     }
 
+    @ResponseBody
     @PostMapping("/login")
-    public String login(LoginRequestDto loginRequestDto) {
-        userService.login(loginRequestDto);
-        return "redirect:/api/shop";
+    public String login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
+        userService.login(loginRequestDto, response);
+        return "success";
     }
 }

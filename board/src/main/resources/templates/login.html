@@ -6,6 +6,7 @@
           name="viewport">
     <meta content="ie=edge" http-equiv="X-UA-Compatible">
     <link href="https://fonts.gstatic.com" rel="preconnect">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/style.css}">
     <meta charset="UTF-8">
@@ -21,15 +22,14 @@
     <button id="login-id-btn" onclick="location.href='/api/user/signup'">
         회원 가입하기
     </button>
-    <form action="/api/user/login" method="POST">
-        <div class="login-id-label">아이디</div>
-        <input class="login-input-box" name="username" type="text">
+    <div class="login-id-label">아이디</div>
+    <input class="login-input-box" id="username" name="username" type="text">
 
-        <div class="login-id-label">비밀번호</div>
-        <input class="login-input-box" name="password" type="password">
+    <div class="login-id-label">비밀번호</div>
+    <input class="login-input-box" id="password" name="password" type="password">
 
-        <button id="login-id-submit">로그인</button>
-    </form>
+    <button id="login-id-submit" onclick="login()">로그인</button>
+
     <div class="alert alert-danger" id="login-failed" role="alert" style="display:none">로그인에 실패하였습니다.</div>
 </div>
 </body>
@@ -39,6 +39,40 @@
     if (queryString === 'error') {
         const errorDiv = document.getElementById('login-failed');
         errorDiv.style.display = 'block';
+    }
+
+    function login() {
+
+        let username = $('#username').val();
+        let password = $('#password').val();
+
+        if (username == '') {
+            alert('ID를 입력해주세요');
+            return;
+        } else if (password == '') {
+            alert('비밀번호를 입력해주세요');
+            return;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: `/api/user/login`,
+            contentType: "application/json",
+            data: JSON.stringify({username: username, password: password}),
+            success: function (response, status, xhr) {
+                if (response === 'success') {
+                    let host = window.location.host;
+                    let url = host + '/api/shop';
+
+                    document.cookie =
+                        'Authorization' + '=' + xhr.getResponseHeader('Authorization') + ';path=/';
+                    window.location.href = 'http://' + url;
+                } else {
+                    alert('로그인에 실패하셨습니다. 다시 로그인해 주세요.')
+                    window.location.reload();
+                }
+            }
+        })
     }
 </script>
 </html>
