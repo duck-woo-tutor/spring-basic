@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.security.Key;
-import java.time.LocalDate;
 import java.util.Base64;
 import java.util.Date;
 
@@ -45,22 +44,22 @@ public class JwtUtil {
     }
 
     public String createToken(String userId, UserRole role) {
-        LocalDate localDate = LocalDate.now();
+        Date date = new Date();
 
         return BEARER_PREFIX +
                 Jwts.builder()
-                        .setSubject(userId)
-//                        .claim("userId", userId)
-                        .claim(AUTHORIZATION_KEY, role)
-                        .setExpiration(new Date(localDate.toEpochDay() + TOKEN_EXPIRE_TIME))
-                        .setIssuedAt(new Date())
+//                        .setSubject(userId)
+                        .claim("userId", userId)
+//                        .claim(AUTHORIZATION_KEY, role)
+                        .setExpiration(new Date(date.getTime() + TOKEN_EXPIRE_TIME))
+                        .setIssuedAt(date)
                         .signWith(key, signatureAlgorithm)
                         .compact();
     }
 
     public Claims getClaims(String token) {
         try {
-            return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJwt(token).getBody();
+            return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
         } catch (SecurityException | MalformedJwtException e) {
             log.info("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
         } catch (ExpiredJwtException e) {
