@@ -3,6 +3,9 @@ package io.myselectshop.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Entity(name = "users")
 public class User {
@@ -22,6 +25,9 @@ public class User {
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRole role;
+
+    @OneToMany
+    List<Folder> folders = new ArrayList<>();
 
     public User(String name, String password, String email, UserRole role) {
         this.name = name;

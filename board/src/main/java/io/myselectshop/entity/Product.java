@@ -7,6 +7,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -33,6 +36,9 @@ public class Product extends Timestamped {
     @Column(nullable = false)
     private Long userId;
 
+    @ManyToMany
+    private List<Folder> folderList = new ArrayList<>();
+
     public Product() {
     }
 
@@ -51,5 +57,9 @@ public class Product extends Timestamped {
 
     public void updateByItemDto(ItemDto itemDto) {
         this.lprice = itemDto.getLprice();
+    }
+
+    public void addFolder(Folder folder) {
+        this.folderList.add(folder);
     }
 }

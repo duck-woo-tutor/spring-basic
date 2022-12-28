@@ -3,6 +3,7 @@ package io.myselectshop.controller;
 import io.myselectshop.dto.ProductMyPriceRequestDto;
 import io.myselectshop.dto.ProductRequestDto;
 import io.myselectshop.dto.ProductResponseDto;
+import io.myselectshop.entity.Product;
 import io.myselectshop.service.ProductService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -22,18 +23,24 @@ public class ProductController {
     }
 
     @GetMapping("/products")
-    public Page<ProductResponseDto> getProducts(
+    public Page<Product> getProducts(
             @RequestParam int page,
             @RequestParam int size,
             @RequestParam String sortBy,
             @RequestParam Boolean isAsc,
             HttpServletRequest request
     ) {
-        return productService.getProducts(request, page - 1, size, sortBy, isAsc).map(ProductResponseDto::new);
+        return productService.getProducts(request, page - 1, size, sortBy, isAsc);
     }
 
     @PutMapping("/products/{id}")
     public Long updateProduct(@PathVariable Long id, @RequestBody ProductMyPriceRequestDto requestDto, HttpServletRequest request) {
         return productService.updateProduct(id, requestDto, request);
+    }
+
+    @PostMapping("/products/{id}/folder")
+    public Long addFolder(@PathVariable Long id, @RequestParam Long folderId, HttpServletRequest request) {
+        Product product = productService.addFolder(id, folderId, request);
+        return product.getId();
     }
 }
