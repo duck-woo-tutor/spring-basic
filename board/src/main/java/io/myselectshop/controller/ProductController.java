@@ -6,9 +6,8 @@ import io.myselectshop.dto.ProductResponseDto;
 import io.myselectshop.service.ProductService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -23,8 +22,14 @@ public class ProductController {
     }
 
     @GetMapping("/products")
-    public List<ProductResponseDto> getProducts(HttpServletRequest request) {
-        return productService.getProducts(request);
+    public Page<ProductResponseDto> getProducts(
+            @RequestParam int page,
+            @RequestParam int size,
+            @RequestParam String sortBy,
+            @RequestParam Boolean isAsc,
+            HttpServletRequest request
+    ) {
+        return productService.getProducts(request, page - 1, size, sortBy, isAsc).map(ProductResponseDto::new);
     }
 
     @PutMapping("/products/{id}")

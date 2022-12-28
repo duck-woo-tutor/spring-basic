@@ -5,7 +5,6 @@ import io.myselectshop.config.security.JwtUtil;
 import io.myselectshop.dto.ItemDto;
 import io.myselectshop.dto.ProductMyPriceRequestDto;
 import io.myselectshop.dto.ProductRequestDto;
-import io.myselectshop.dto.ProductResponseDto;
 import io.myselectshop.entity.Product;
 import io.myselectshop.entity.User;
 import io.myselectshop.entity.UserRole;
@@ -13,11 +12,12 @@ import io.myselectshop.repository.ProductRepository;
 import io.myselectshop.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @Transactional
@@ -29,7 +29,7 @@ public class ProductService {
     private final JwtUtil jwtUtil;
 
     public Product createProduct(ProductRequestDto requestDto, HttpServletRequest request) {
-        User user = getUser(request);
+        User user = getJwtUser(request);
 
         Product product = new Product(requestDto, user.getId());
 
@@ -37,27 +37,27 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponseDto> getProducts(HttpServletRequest request) {
-        User user = getUser(request);
+    public Page<Product> getProducts(HttpServletRequest request, int page, int size, String sortBy, Boolean isAsc) {
+        // Paging
+        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
 
-        List<ProductResponseDto> result = new ArrayList<>();
-        List<Product> productList;
+        User user = getJwtUser(request);
+
+        Page<Product> productList;
 
         if (user.getRole() == UserRole.USER) {
-            productList = productRepository.findAllByUserId(user.getId());
+            productList = productRepository.findAllByUserId(user.getId(), pageable);
         } else {
-            productList = productRepository.findAll();
+            productList = productRepository.findAll(pageable);
         }
 
-        for (Product product : productList) {
-            result.add(new ProductResponseDto(product));
-        }
-
-        return result;
+        return productList;
     }
 
     public Long updateProduct(Long id, ProductMyPriceRequestDto requestDto, HttpServletRequest request) {
-        User user = getUser(request);
+        User user = getJwtUser(request);
 
         Product product = productRepository.findByIdAndUserId(id, user.getId()).orElseThrow(() -> new NullPointerException("해당 상품은 존재하지 않습니다."));
 
@@ -70,7 +70,7 @@ public class ProductService {
         product.updateByItemDto(itemDto);
     }
 
-    private User getUser(HttpServletRequest request) {
+    private User getJwtUser(HttpServletRequest request) {
         String token = jwtUtil.resolveToken(request);
 
         if (token == null) {
