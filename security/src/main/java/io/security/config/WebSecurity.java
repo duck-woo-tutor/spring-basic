@@ -24,11 +24,10 @@ public class WebSecurity {
         http.csrf().disable();
 
         http.authorizeHttpRequests()
-                .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                 .anyRequest().authenticated();
 
-        // 로그인 사용
-        http.formLogin();
+        // Custom 로그인 페이지 사용
+        http.formLogin().loginPage("/api/user/login-page").permitAll();
 
         return http.build();
     }
