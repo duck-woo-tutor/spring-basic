@@ -33,7 +33,7 @@ public class CustomSecurityFilter extends OncePerRequestFilter {
 
         if (username != null && password != null
                 && (request.getRequestURI().equals("/api/user/login"))
-                || (request.getRequestURI().equals("/api/test-scured"))
+                || (request.getRequestURI().equals("/api/test-secured"))
         ) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
@@ -42,7 +42,7 @@ public class CustomSecurityFilter extends OncePerRequestFilter {
             }
 
             SecurityContext context = SecurityContextHolder.createEmptyContext();
-            Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
+            Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             context.setAuthentication(authentication);
 
             SecurityContextHolder.setContext(context);
