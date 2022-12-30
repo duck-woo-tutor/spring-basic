@@ -17,4 +17,10 @@ public class SignRequestDto {
     public boolean isAdmin() {
         return admin;
     }
+
+    public SignRequestDto(String username, String password) {
+        this.username = username;
+        this.password = password;
+        this.email = "";
+    }
 }
