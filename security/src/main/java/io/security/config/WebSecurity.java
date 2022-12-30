@@ -45,20 +45,22 @@ public class WebSecurity {
 
         http.authorizeHttpRequests((authorize) ->
                         authorize
+                                .requestMatchers("/").permitAll()
                                 .requestMatchers("/api/user/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 // Custom 로그인 페이지 사용
-                .formLogin().loginPage("/api/user/login-page").permitAll();
-
+                .formLogin().loginPage("/api/user/login-page");
 
         http.addFilterBefore(new CustomSecurityFilter(userDetailsService, passwordEncoder()), UsernamePasswordAuthenticationFilter.class);
 
         // 접근 제한 페이지 이동 설정
         // http.exceptionHandling().accessDeniedPage("/api/user/forbidden"); -> access
 
+        // 401 Error 처리, 인증과정에서 실패 처리
         http.exceptionHandling().authenticationEntryPoint(customAuthenticationEntryPoint);
 
+        // 403 Error 처리, 인증과 별갸로 추가적인 권한이 충족되지 않는 경우
         http.exceptionHandling().accessDeniedHandler(customerAccessDeniedHandler);
 
         return http.build();

@@ -17,7 +17,6 @@ import java.io.OutputStream;
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
     private static final SecurityExceptionDto exceptionDto = new SecurityExceptionDto(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
 
-
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
