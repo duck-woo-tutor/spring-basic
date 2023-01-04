@@ -1,12 +1,12 @@
 package io.myselectshop.controller;
 
-import io.jsonwebtoken.Claims;
 import io.myselectshop.config.security.JwtUtil;
-import io.myselectshop.entity.User;
+import io.myselectshop.config.security.UserDetailsImpl;
 import io.myselectshop.repository.UserRepository;
 import io.myselectshop.service.FolderService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,18 +37,7 @@ public class ShopController {
 
     @GetMapping("/user-info")
     @ResponseBody
-    public String getUserName(HttpServletRequest request) {
-        return getJwtUser(request).getName();
-    }
-
-    private User getJwtUser(HttpServletRequest request) {
-        String token = jwtUtil.resolveToken(request);
-
-        if (token == null) {
-            throw new SecurityException("인증 실패");
-        }
-        Claims claims = jwtUtil.getClaims(token);
-        Long userId = Long.parseLong(claims.get("userId").toString());
-        return userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("사용자가 존재하지 않습니다."));
+    public String getUserName(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return userDetails.user().getName();
     }
 }

@@ -2,6 +2,7 @@ package io.security.config;
 
 import io.security.config.security.CustomAuthenticationEntryPoint;
 import io.security.config.security.CustomerAccessDeniedHandler;
+import io.security.entity.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -46,7 +47,7 @@ public class WebSecurity {
         http.authorizeHttpRequests((authorize) ->
                         authorize
                                 .requestMatchers("/").permitAll()
-                                .requestMatchers("/api/user/**").permitAll()
+                                .requestMatchers("/api/user/**").hasRole(UserRole.USER.getAuthority())
                                 .anyRequest().authenticated()
                 )
                 // Custom 로그인 페이지 사용

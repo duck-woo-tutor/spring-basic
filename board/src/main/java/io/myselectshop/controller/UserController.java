@@ -20,15 +20,15 @@ public class UserController {
         return new ModelAndView("signup");
     }
 
-    @GetMapping("/login")
-    public ModelAndView loginPage() {
-        return new ModelAndView("login");
-    }
-
     @PostMapping("/signup")
     public String signup(SignRequestDto signRequestDto) {
         userService.signup(signRequestDto);
         return "redirect:/api/user/login";
+    }
+
+    @GetMapping("/login-page")
+    public ModelAndView loginPage() {
+        return new ModelAndView("login");
     }
 
     @ResponseBody
@@ -36,5 +36,15 @@ public class UserController {
     public String login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
         userService.login(loginRequestDto, response);
         return "success";
+    }
+
+    @GetMapping("/forbidden")
+    public ModelAndView getForbidden() {
+        return new ModelAndView("forbidden");
+    }
+
+    @PostMapping("/forbidden")
+    public ModelAndView postForbidden() {
+        return new ModelAndView("forbidden");
     }
 }

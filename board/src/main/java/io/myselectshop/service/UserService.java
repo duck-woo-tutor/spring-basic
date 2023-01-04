@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,17 +23,23 @@ public class UserService {
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
 
+    private final PasswordEncoder passwordEncoder;
+
 
     @Value(value = "${token.admin}")
     private String ADMIN_TOKEN;
 
     @PostConstruct
     private void setUpTestDate() {
-        userRepository.save(new User("test", "test", "test", UserRole.USER));
+        SignRequestDto signRequestDto = new SignRequestDto();
+        signRequestDto.setUsername("test");
+        signRequestDto.setPassword("test");
+        signup(signRequestDto);
     }
 
     public void signup(SignRequestDto signRequestDto) {
         String username = signRequestDto.getUsername();
+        String encodedPassword = passwordEncoder.encode(signRequestDto.getPassword());
 
         userRepository.findByName(username).ifPresent(u -> {
             throw new IllegalArgumentException("중복된 사용자가 존재합니다.");
@@ -45,19 +52,18 @@ public class UserService {
             }
             role = UserRole.ADMIN;
         }
-        userRepository.save(new User(username, signRequestDto.getPassword(), signRequestDto.getEmail(), role));
+        userRepository.save(new User(username, encodedPassword, signRequestDto.getEmail(), role));
     }
 
     @Transactional(readOnly = true)
     public void login(LoginRequestDto loginRequestDto, HttpServletResponse response) {
-        User user = userRepository.findByName(loginRequestDto.getUsername()).orElseThrow(() -> new IllegalArgumentException("등록된 사용자가 없습니다."));
+        User user = userRepository.findByName(loginRequestDto.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("등록된 사용자가 없습니다."));
 
-        if (!user.getPassword().equals(loginRequestDto.getPassword())) {
+        if (!passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다");
         }
 
-        String generatedToken = jwtUtil.createToken(user.getId().toString(), user.getRole());
-        log.info("Generated Token: {}", generatedToken);
-        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, generatedToken);
+        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getId(), user.getRole()));
     }
 }

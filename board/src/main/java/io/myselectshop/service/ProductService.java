@@ -41,13 +41,11 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Product> getProducts(HttpServletRequest request, int page, int size, String sortBy, Boolean isAsc) {
+    public Page<Product> getProducts(User user, int page, int size, String sortBy, Boolean isAsc) {
         // Paging
         Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
         Sort sort = Sort.by(direction, sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
-
-        User user = getJwtUser(request);
 
         Page<Product> productList;
 
@@ -60,9 +58,7 @@ public class ProductService {
         return productList;
     }
 
-    public Long updateProduct(Long id, ProductMyPriceRequestDto requestDto, HttpServletRequest request) {
-        User user = getJwtUser(request);
-
+    public Long updateProduct(Long id, ProductMyPriceRequestDto requestDto, User user) {
         Product product = productRepository.findByIdAndUserId(id, user.getId()).orElseThrow(() -> new NullPointerException("해당 상품은 존재하지 않습니다."));
 
         product.update(requestDto);
@@ -74,9 +70,7 @@ public class ProductService {
         product.updateByItemDto(itemDto);
     }
 
-    public Product addFolder(Long id, Long folderId, HttpServletRequest request) {
-        User user = getJwtUser(request);
-
+    public Product addFolder(Long id, Long folderId, User user) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new NullPointerException("해당 상품 아이디가 존재하지 않습니다."));
 

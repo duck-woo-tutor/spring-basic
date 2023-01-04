@@ -9,6 +9,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -25,6 +29,9 @@ public class JwtUtil {
     public static final String BEARER_PREFIX = "Bearer ";
     private static final long TOKEN_EXPIRE_TIME = 60 * 60 * 1000L;
     private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
+
+    private final UserDetailsService userDetailsService;
+
     @Value("${jwt.secret}")
     private String secretKey;
     private Key key;
@@ -43,14 +50,14 @@ public class JwtUtil {
         return null;
     }
 
-    public String createToken(String userId, UserRole role) {
+    public String createToken(Long userId, UserRole role) {
         Date date = new Date();
 
         return BEARER_PREFIX +
                 Jwts.builder()
-//                        .setSubject(userId)
+                        .setSubject(userId.toString())
                         .claim("userId", userId)
-//                        .claim(AUTHORIZATION_KEY, role)
+                        .claim(AUTHORIZATION_KEY, role)
                         .setExpiration(new Date(date.getTime() + TOKEN_EXPIRE_TIME))
                         .setIssuedAt(date)
                         .signWith(key, signatureAlgorithm)
@@ -58,8 +65,20 @@ public class JwtUtil {
     }
 
     public Claims getClaims(String token) {
+        validateToken(token);
+        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+    }
+
+    public Authentication createAuthentication(String userId) {
+        UserDetails userDetails = userDetailsService.loadUserByUsername(userId);
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+    }
+
+    // 토큰 검증
+    public boolean validateToken(String token) {
         try {
-            return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            return true;
         } catch (SecurityException | MalformedJwtException e) {
             log.info("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
         } catch (ExpiredJwtException e) {
@@ -69,7 +88,6 @@ public class JwtUtil {
         } catch (IllegalArgumentException e) {
             log.info("JWT claims is empty, 잘못된 JWT 토큰 입니다.");
         }
-        throw new SecurityException("인증 실패");
+        return false;
     }
-
 }
