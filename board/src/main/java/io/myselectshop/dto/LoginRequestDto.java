@@ -1,12 +1,10 @@
 package io.myselectshop.dto;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
-@Setter
-@NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class LoginRequestDto {
     private String username;
     private String password;

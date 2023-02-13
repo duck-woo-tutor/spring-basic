@@ -36,6 +36,9 @@ public class User {
         this.role = role;
     }
 
-    public User() {
+    protected User() {}
+
+    public void setIdForTest() {
+        this.id = 1L;
     }
 }

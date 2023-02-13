@@ -4,8 +4,10 @@ import io.myselectshop.dto.LoginRequestDto;
 import io.myselectshop.dto.SignRequestDto;
 import io.myselectshop.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -21,7 +23,7 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public String signup(SignRequestDto signRequestDto) {
+    public String signup(@RequestBody @Validated SignRequestDto signRequestDto) {
         userService.signup(signRequestDto);
         return "redirect:/api/user/login";
     }

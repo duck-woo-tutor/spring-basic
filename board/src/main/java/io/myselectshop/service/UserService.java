@@ -37,7 +37,7 @@ public class UserService {
         signup(signRequestDto);
     }
 
-    public void signup(SignRequestDto signRequestDto) {
+    public Long signup(SignRequestDto signRequestDto) {
         String username = signRequestDto.getUsername();
         String encodedPassword = passwordEncoder.encode(signRequestDto.getPassword());
 
@@ -52,7 +52,8 @@ public class UserService {
             }
             role = UserRole.ADMIN;
         }
-        userRepository.save(new User(username, encodedPassword, signRequestDto.getEmail(), role));
+        User user = userRepository.save(new User(username, encodedPassword, signRequestDto.getEmail(), role));
+        return user.getId();
     }
 
     @Transactional(readOnly = true)
